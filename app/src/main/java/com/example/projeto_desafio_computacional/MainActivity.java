@@ -1,24 +1,49 @@
 package com.example.projeto_desafio_computacional;
 
 import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
+
+    private LinearLayout layoutTipos, layoutClasses;
+    private Button btnFrutas, btnAnimais, btnObjetos, btnClasses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+
+        Button btnJogar = findViewById(R.id.btnJogar);
+        btnFrutas = findViewById(R.id.btnFrutas);
+        btnAnimais = findViewById(R.id.btnAnimais);
+        btnObjetos = findViewById(R.id.btnObjetos);
+        btnClasses = findViewById(R.id.btnClasses);
+
+        layoutTipos = findViewById(R.id.layoutTipos);
+        layoutClasses = findViewById(R.id.layoutClasses);
+
+        btnJogar.setOnClickListener(v -> {
+            if (layoutTipos.getVisibility() == View.GONE) {
+                layoutTipos.setVisibility(View.VISIBLE);
+            } else {
+                layoutTipos.setVisibility(View.GONE);
+                layoutClasses.setVisibility(View.GONE);
+
+                btnFrutas.setVisibility(View.VISIBLE);
+                btnAnimais.setVisibility(View.VISIBLE);
+                btnObjetos.setVisibility(View.VISIBLE);
+            }
+        });
+
+        btnClasses.setOnClickListener(v -> {
+            layoutClasses.setVisibility(View.VISIBLE);
+
+            btnFrutas.setVisibility(View.GONE);
+            btnAnimais.setVisibility(View.GONE);
+            btnObjetos.setVisibility(View.GONE);
         });
     }
 }

@@ -1,19 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="#1a1a1a"
+    android:padding="24dp">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/btnJogar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="▶️ JOGAR"
+        android:textSize="22sp"
+        android:backgroundTint="#3A3A3A"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="24dp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:id="@+id/layoutTipos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/btnFrutas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🍎 Palavras de Frutas"
+            android:textSize="18sp"
+            android:backgroundTint="#3A3A3A"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/botao_borda" />
+
+        <Button
+            android:id="@+id/btnAnimais"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🐶 Palavras de Animais"
+            android:textSize="18sp"
+            android:backgroundTint="#3A3A3A"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/botao_borda" />
+
+        <Button
+            android:id="@+id/btnObjetos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="📦 Palavras de Objetos"
+            android:textSize="18sp"
+            android:backgroundTint="#3A3A3A"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/botao_borda" />
+
+        <Button
+            android:id="@+id/btnClasses"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🎓 Classes"
+            android:textSize="18sp"
+            android:backgroundTint="#3A3A3A"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/botao_borda" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutClasses"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/btnMonossilabas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1️⃣ Monossílabas"
+            android:textSize="16sp"
+            android:backgroundTint="#3A3A3A"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="6dp" />
+
+        <Button
+            android:id="@+id/btnDissilabas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2️⃣ Dissílabas"
+            android:textSize="16sp"
+            android:backgroundTint="#3A3A3A"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="6dp" />
+
+        <Button
+            android:id="@+id/btnTrissilabas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="3️⃣ Trissílabas"
+            android:textSize="16sp"
+            android:backgroundTint="#3A3A3A"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="6dp" />
+
+        <Button
+            android:id="@+id/btnPolissilabas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🔢 Polissílabas"
+            android:textSize="16sp"
+            android:backgroundTint="#3A3A3A"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="6dp" />
+    </LinearLayout>
+
+</LinearLayout>
