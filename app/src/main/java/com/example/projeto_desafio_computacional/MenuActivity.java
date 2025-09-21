@@ -1,12 +1,13 @@
 package com.example.projeto_desafio_computacional;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MenuActivity extends AppCompatActivity {
 
     private LinearLayout layoutTipos, layoutClasses;
     private Button btnFrutas, btnAnimais, btnObjetos, btnClasses;
@@ -14,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_menu);
 
         Button btnJogar = findViewById(R.id.btnJogar);
         btnFrutas = findViewById(R.id.btnFrutas);
@@ -45,5 +46,27 @@ public class MainActivity extends AppCompatActivity {
             btnAnimais.setVisibility(View.GONE);
             btnObjetos.setVisibility(View.GONE);
         });
+
+        // Navegação dos botões
+        btnFrutas.setOnClickListener(v -> abrirTelaFrutas());
+        btnAnimais.setOnClickListener(v -> abrirTelaAnimais());
+        btnObjetos.setOnClickListener(v -> abrirTelaObjetos());
+
     }
+
+    private void abrirTelaFrutas() {
+        Intent intent = new Intent(MenuActivity.this, FrutasActivity.class);
+        startActivity(intent);
+    }
+
+    private void abrirTelaAnimais() {
+        Intent intent = new Intent(MenuActivity.this, AnimaisActivity.class);
+        startActivity(intent);
+    }
+
+    private void abrirTelaObjetos() {
+        Intent intent = new Intent(MenuActivity.this, ObjetosActivity.class);
+        startActivity(intent);
+    }
+
 }

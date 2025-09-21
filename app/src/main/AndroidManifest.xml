@@ -11,13 +11,17 @@
         android:theme="@style/Theme.Projetodesafiocomputacional">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".MenuActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".FrutasActivity" />
+        <activity android:name=".AnimaisActivity" />
+        <activity android:name=".ObjetosActivity" />
 
     </application>
 </manifest>
