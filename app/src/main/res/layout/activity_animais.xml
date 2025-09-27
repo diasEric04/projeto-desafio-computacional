@@ -1,28 +1,158 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#F5F5F5"
+    tools:context=".AnimaisActivity">
 
+    <!-- CRONÔMETRO -->
     <TextView
-        android:id="@+id/txtTitulo"
+        android:id="@+id/txtTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tela de Animais"
-        android:textSize="20sp"
+        android:text="Tempo: 00:00"
+        android:textSize="24sp"
+        android:textColor="#3F51B5"
+        android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="100dp"/>
+        android:layout_marginTop="8dp" />
 
+    <!-- RODADA ATUAL -->
+    <TextView
+        android:id="@+id/txtRoundCounter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rodada: 0/10"
+        android:textSize="18sp"
+        android:textColor="#607D8B"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp" />
+
+    <!-- TÍTULO/CLASSE DA DICA (Será a Categoria: Animal) -->
+    <TextView
+        android:id="@+id/txtCategoryTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:gravity="center"
+        android:text="Categoria:"
+        android:textColor="#000000"
+        android:textSize="22sp"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtTimer" />
+
+    <!-- Campo da DICA ATUAL -->
+    <TextView
+        android:id="@+id/txtHint"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/rounded_background"
+        android:gravity="center"
+        android:minHeight="80dp"
+        android:padding="16dp"
+        android:text="Pressione INICIAR para começar a rodada 1..."
+        android:textColor="#424242"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtCategoryTitle" />
+
+    <!-- INPUT DO USUÁRIO -->
+    <EditText
+        android:id="@+id/editGuess"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:hint="Digite sua resposta aqui..."
+        android:imeOptions="actionDone"
+        android:inputType="textNoSuggestions|textCapWords"
+        android:maxLines="1"
+        android:textSize="18sp"
+        android:textColor="#000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtHint" />
+
+    <!-- CAMPO DE FEEDBACK (Acertou/Errou) -->
+    <TextView
+        android:id="@+id/txtFeedback"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text=""
+        android:textColor="#FF5722"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editGuess" />
+
+
+    <!-- BOTÕES DE AÇÃO -->
+
+    <Button
+        android:id="@+id/btnStart"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="INICIAR JOGO"
+        android:textSize="18sp"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="#4CAF50"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtFeedback" />
+
+    <LinearLayout
+        android:id="@+id/layout_action_buttons"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnStart">
+
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:text="TENTAR"
+            android:textSize="16sp"
+            android:enabled="false"
+            android:backgroundTint="#2196F3"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/btnHint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:text="DICA"
+            android:textSize="16sp"
+            android:enabled="false"
+            android:backgroundTint="#FFC107"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
+
+
+    <!-- BOTÃO VOLTAR (Canto Inferior) -->
     <Button
         android:id="@+id/btnVoltarMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Voltar ao Menu"
-        app:layout_constraintTop_toBottomOf="@id/txtTitulo"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="30dp"/>
+        android:text="VOLTAR"
+        android:backgroundTint="#9E9E9E"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
