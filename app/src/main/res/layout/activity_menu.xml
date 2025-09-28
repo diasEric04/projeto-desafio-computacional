@@ -24,38 +24,97 @@
         android:orientation="vertical"
         android:visibility="gone">
 
-        <Button
-            android:id="@+id/btnFrutas"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="🍎 Palavras de Frutas"
-            android:textSize="18sp"
-            android:backgroundTint="#3A3A3A"
-            android:textColor="#FFFFFF"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/botao_borda" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
 
-        <Button
-            android:id="@+id/btnAnimais"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="🐶 Palavras de Animais"
-            android:textSize="18sp"
-            android:backgroundTint="#3A3A3A"
-            android:textColor="#FFFFFF"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/botao_borda" />
+            <Button
+                android:id="@+id/btnFrutas"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="🍎 Palavras de Frutas"
+                android:textSize="18sp"
+                android:backgroundTint="#3A3A3A"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/botao_borda" />
 
-        <Button
-            android:id="@+id/btnObjetos"
+            <TextView
+                android:id="@+id/txtMaxFrutas"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Max: 0"
+                android:textSize="14sp"
+                android:textColor="#4CAF50"
+                android:gravity="center"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="📦 Palavras de Objetos"
-            android:textSize="18sp"
-            android:backgroundTint="#3A3A3A"
-            android:textColor="#FFFFFF"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/botao_borda" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <Button
+                android:id="@+id/btnAnimais"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="🐶 Palavras de Animais"
+                android:textSize="18sp"
+                android:backgroundTint="#3A3A3A"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/botao_borda" />
+
+            <TextView
+                android:id="@+id/txtMaxAnimais"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Max: 0"
+                android:textSize="14sp"
+                android:textColor="#4CAF50"
+                android:gravity="center"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <Button
+                android:id="@+id/btnObjetos"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="📦 Palavras de Objetos"
+                android:textSize="18sp"
+                android:backgroundTint="#3A3A3A"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/botao_borda" />
+
+            <TextView
+                android:id="@+id/txtMaxObjetos"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Max: 0"
+                android:textSize="14sp"
+                android:textColor="#4CAF50"
+                android:gravity="center"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/btnClasses"

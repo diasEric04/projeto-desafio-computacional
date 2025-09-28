@@ -32,7 +32,45 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="12dp" />
 
-    <!-- TÍTULO/CLASSE DA DICA (Será a Categoria: Fruta, Objeto, Animal) -->
+    <!-- PONTUAÇÃO ATUAL -->
+    <TextView
+        android:id="@+id/txtPontuacao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pontos: 0"
+        android:textSize="18sp"
+        android:textColor="#4CAF50"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/txtRoundCounter"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="4dp" />
+
+    <!-- BÔNUS DE TEMPO -->
+    <TextView
+        android:id="@+id/txtBonus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+0"
+        android:textSize="16sp"
+        android:textColor="#FF9800"
+        app:layout_constraintTop_toBottomOf="@+id/txtTimer"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="4dp" />
+
+    <!-- PONTOS POR ACERTO -->
+    <TextView
+        android:id="@+id/txtPontosAcerto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="50 pts"
+        android:textSize="14sp"
+        android:textColor="#2196F3"
+        app:layout_constraintTop_toBottomOf="@+id/btnSubmit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp" />
+
+    <!-- TÍTULO/CLASSE DA DICA -->
     <TextView
         android:id="@+id/txtCategoryTitle"
         android:layout_width="0dp"
@@ -45,7 +83,7 @@
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtTimer" />
+        app:layout_constraintTop_toBottomOf="@+id/txtBonus" />
 
     <!-- Campo da DICA ATUAL -->
     <TextView
@@ -75,11 +113,12 @@
         android:inputType="textNoSuggestions|textCapWords"
         android:maxLines="1"
         android:textSize="18sp"
+        android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtHint" />
 
-    <!-- CAMPO DE FEEDBACK (Acertou/Errou) -->
+    <!-- CAMPO DE FEEDBACK -->
     <TextView
         android:id="@+id/txtFeedback"
         android:layout_width="0dp"
@@ -94,9 +133,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editGuess" />
 
-
     <!-- BOTÕES DE AÇÃO -->
-
     <Button
         android:id="@+id/btnStart"
         android:layout_width="0dp"
@@ -143,8 +180,7 @@
             android:layout_marginStart="8dp"/>
     </LinearLayout>
 
-
-    <!-- BOTÃO VOLTAR (Canto Inferior) -->
+    <!-- BOTÃO VOLTAR -->
     <Button
         android:id="@+id/btnVoltarMenu"
         android:layout_width="wrap_content"

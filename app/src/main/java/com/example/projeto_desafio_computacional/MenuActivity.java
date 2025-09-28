@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
@@ -14,13 +15,15 @@ public class MenuActivity extends AppCompatActivity {
 
     private LinearLayout layoutTipos, layoutClasses;
     private Button btnFrutas, btnAnimais, btnObjetos, btnClasses;
+    private TextView txtMaxFrutas, txtMaxAnimais, txtMaxObjetos;
+    private DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
-        DatabaseHelper dbHelper = new DatabaseHelper(this);
+        dbHelper = new DatabaseHelper(this);
         try {
             dbHelper.copyDatabase();
         } catch (IOException e) {
@@ -36,12 +39,21 @@ public class MenuActivity extends AppCompatActivity {
         btnObjetos = findViewById(R.id.btnObjetos);
         btnClasses = findViewById(R.id.btnClasses);
 
+        txtMaxFrutas = findViewById(R.id.txtMaxFrutas);
+        txtMaxAnimais = findViewById(R.id.txtMaxAnimais);
+        txtMaxObjetos = findViewById(R.id.txtMaxObjetos);
+
         layoutTipos = findViewById(R.id.layoutTipos);
         layoutClasses = findViewById(R.id.layoutClasses);
+
+        // Carrega as pontuações máximas
+        carregarPontuacoesMaximas();
 
         btnJogar.setOnClickListener(v -> {
             if (layoutTipos.getVisibility() == View.GONE) {
                 layoutTipos.setVisibility(View.VISIBLE);
+                // Atualiza as pontuações quando abre o menu
+                carregarPontuacoesMaximas();
             } else {
                 layoutTipos.setVisibility(View.GONE);
                 layoutClasses.setVisibility(View.GONE);
@@ -67,6 +79,16 @@ public class MenuActivity extends AppCompatActivity {
 
     }
 
+    private void carregarPontuacoesMaximas() {
+        int maxFrutas = dbHelper.getMaxScoreByGameType("fruta");
+        int maxAnimais = dbHelper.getMaxScoreByGameType("animal");
+        int maxObjetos = dbHelper.getMaxScoreByGameType("objeto");
+
+        txtMaxFrutas.setText("Max: " + maxFrutas);
+        txtMaxAnimais.setText("Max: " + maxAnimais);
+        txtMaxObjetos.setText("Max: " + maxObjetos);
+    }
+
     private void abrirTelaFrutas() {
         Intent intent = new Intent(MenuActivity.this, FrutasActivity.class);
         startActivity(intent);
@@ -82,4 +104,10 @@ public class MenuActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Atualiza as pontuações quando retorna para o menu
+        carregarPontuacoesMaximas();
+    }
 }
