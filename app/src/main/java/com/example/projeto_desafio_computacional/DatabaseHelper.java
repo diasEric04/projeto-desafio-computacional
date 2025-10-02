@@ -23,32 +23,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
+        // Criar tabela de pontuações se não existir
+        String createScoreTable = "CREATE TABLE IF NOT EXISTS scores (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "game_type TEXT NOT NULL, " +
+                "total_score INTEGER DEFAULT 0, " +
+                "max_score INTEGER DEFAULT 0, " +
+                "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)";
+        db.execSQL(createScoreTable);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        // Implementar upgrade se necessário
     }
 
     public void createAndOpenDatabase() throws IOException {
-        // 1. Força o SQLiteOpenHelper a criar o banco de dados vazio no destino
-        //    (Seu onCreate() será chamado APENAS se o arquivo não existir.
-        //    Mas como você está usando um arquivo .db, seu onCreate deve estar vazio.)
         this.getReadableDatabase().close();
-
-        // 2. Chama o método de cópia
         copyDatabase();
     }
 
     public void copyDatabase() throws IOException {
         String outFileName = context.getDatabasePath(DB_NAME).getPath();
 
-        // Se o banco já existir, não precisa copiar
         java.io.File dbFile = new java.io.File(outFileName);
         if (dbFile.exists()) return;
 
-        // Cria diretório se não existir
         dbFile.getParentFile().mkdirs();
 
         InputStream input = context.getAssets().open(DB_NAME);
@@ -79,25 +79,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String[] resultArray = null;
 
         try {
-            // Consulta SQL: Usa JOIN nas tabelas 'palavras' e 'categoria',
-            // filtra pela categoria passada e seleciona 1 registro aleatório.
             String query =
-                    "SELECT p.*, c.categoria FROM palavras p " + // Seleciona todas as colunas de 'palavras' e a coluna 'categoria' de 'c'
+                    "SELECT p.*, c.categoria FROM palavras p " +
                             "JOIN categoria c ON p.id_categoria = c.id " +
                             "WHERE c.categoria = ? " +
                             "ORDER BY RANDOM() LIMIT 1";
 
             String[] selectionArgs = { category };
 
-            // Executa a consulta
             cursor = db.rawQuery(query, selectionArgs);
 
-            // Verifica se encontrou um resultado
             if (cursor != null && cursor.moveToFirst()) {
                 int columnCount = cursor.getColumnCount();
                 resultArray = new String[columnCount];
 
-                // Itera por todas as colunas da linha e extrai os valores como String
                 for (int i = 0; i < columnCount; i++) {
                     resultArray[i] = cursor.getString(i);
                 }
@@ -106,7 +101,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Log.e("DB_ERROR", "Erro ao executar query de random com JOIN: " + e.getMessage());
             e.printStackTrace();
         } finally {
-            // SEMPRE feche o cursor
             if (cursor != null) {
                 cursor.close();
             }
@@ -115,4 +109,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return resultArray;
     }
 
+    // NOVOS MÉTODOS PARA PONTUAÇÃO
+    public void saveGameScore(String gameType, int totalScore, int maxScore) {
+        SQLiteDatabase db = this.openDatabase();
+        try {
+            String query = "INSERT INTO scores (game_type, total_score, max_score) VALUES (?, ?, ?)";
+            db.execSQL(query, new Object[]{gameType, totalScore, maxScore});
+            Log.i("DB_SCORE", "Pontuação salva: " + gameType + " - " + totalScore + " pts");
+        } catch (Exception e) {
+            Log.e("DB_ERROR", "Erro ao salvar pontuação: " + e.getMessage());
+        }
+    }
+
+    public int getMaxScoreByGameType(String gameType) {
+        SQLiteDatabase db = this.openDatabase();
+        Cursor cursor = null;
+        int maxScore = 0;
+
+        try {
+            String query = "SELECT MAX(total_score) FROM scores WHERE game_type = ?";
+            cursor = db.rawQuery(query, new String[]{gameType});
+
+            if (cursor != null && cursor.moveToFirst()) {
+                maxScore = cursor.getInt(0);
+            }
+        } catch (Exception e) {
+            Log.e("DB_ERROR", "Erro ao buscar pontuação máxima: " + e.getMessage());
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return maxScore;
+    }
 }
