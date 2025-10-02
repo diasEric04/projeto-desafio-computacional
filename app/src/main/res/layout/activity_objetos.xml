@@ -68,14 +68,15 @@
         app:layout_constraintTop_toBottomOf="@+id/btnSubmit"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="8dp"
+        tools:ignore="NotSibling" />
 
-    <!-- TÍTULO/CLASSE DA DICA -->
+    <!-- TÍTULO DA DICA -->
     <TextView
         android:id="@+id/txtCategoryTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="22dp"
         android:gravity="center"
         android:text="Categoria:"
         android:textColor="#000000"
@@ -85,12 +86,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtBonus" />
 
+    <!-- CAMPO DA CLASSIFICAÇÃO SILÁBICA -->
+    <TextView
+        android:id="@+id/txtSyllabicClass"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="8dp"
+        android:text="CLASSIFICAÇÃO: "
+        android:textColor="#E91E63"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtCategoryTitle" />
+
     <!-- Campo da DICA ATUAL -->
     <TextView
         android:id="@+id/txtHint"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="56dp"
         android:background="@drawable/rounded_background"
         android:gravity="center"
         android:minHeight="80dp"
@@ -99,6 +115,7 @@
         android:textColor="#424242"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtCategoryTitle" />
 
@@ -185,8 +202,9 @@
         android:id="@+id/btnVoltarMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="VOLTAR"
+        android:layout_marginBottom="56dp"
         android:backgroundTint="#9E9E9E"
+        android:text="VOLTAR"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

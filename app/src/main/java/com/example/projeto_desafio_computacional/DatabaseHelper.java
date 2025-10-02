@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.IOException;
+import java.util.Locale;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static String DB_NAME = "palavras.db";
@@ -107,6 +108,53 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         return resultArray;
+    }
+
+    public String getClass(String palavra) {
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+        String classificacao = "N/A"; // Valor padrão se a palavra não for encontrada
+
+        try {
+            // Abre o banco de dados COPIADO
+            db = this.openDatabase();
+
+            // Sua consulta SQL. Note que ela SÓ retorna a coluna 'classe'
+            String query =
+                    "SELECT c.classe FROM classe c " +
+                            "INNER JOIN palavras p ON c.id = p.id_classe " +
+                            "WHERE p.palavra = ?";
+
+            String[] selectionArgs = { palavra.toLowerCase(Locale.getDefault()) };
+
+            cursor = db.rawQuery(query, selectionArgs);
+
+            // Verifica se encontrou um resultado
+            if (cursor != null && cursor.moveToFirst()) {
+
+                // CORREÇÃO: Busca a coluna pelo nome 'classe' (o nome que o SELECT retorna)
+                // Se o SELECT retorna apenas uma coluna, ela tem índice 0.
+                // O getColumnIndexOrThrow é mais seguro do que contar.
+                int classeIndex = cursor.getColumnIndexOrThrow("classe");
+
+                classificacao = cursor.getString(classeIndex);
+            }
+        } catch (IllegalArgumentException e) {
+            // Erro se a coluna 'classe' não for encontrada (checar ortografia do SELECT)
+            Log.e("DB_ERROR", "Coluna 'classe' não encontrada. Erro: " + e.getMessage());
+        } catch (Exception e) {
+            Log.e("DB_ERROR", "Erro ao buscar classificação da palavra: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null && db.isOpen()) {
+                db.close();
+            }
+        }
+
+        return classificacao;
     }
 
     // NOVOS MÉTODOS PARA PONTUAÇÃO

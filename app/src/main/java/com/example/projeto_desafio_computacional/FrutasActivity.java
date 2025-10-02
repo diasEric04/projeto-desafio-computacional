@@ -33,9 +33,11 @@ public class FrutasActivity extends AppCompatActivity {
     private int currentRound = 0;
     private int currentHintLevel = 0;
     private boolean gameInProgress = false;
+    private String syllableClassification = "";
 
     // Variáveis de Pontuação
     private int totalPontos = 0;
+    private int totalDicasUsadas = 0;
     private int pontosPorAcerto = 50;
     private int bonusTempo = 50;
     private int tempoPorRodada = 0;
@@ -47,7 +49,6 @@ public class FrutasActivity extends AppCompatActivity {
     private Handler bonusTimerHandler;
     private long startTime = 0;
     private long rodadaStartTime = 0;
-    private int totalDicasUsadas = 0;
     private TextView txtTimer;
     private TextView txtPontuacao;
     private TextView txtBonus;
@@ -56,6 +57,7 @@ public class FrutasActivity extends AppCompatActivity {
 
     // Variáveis da UI
     private TextView txtCategoryTitle;
+    private TextView txtSyllabicClass;
     private TextView txtHint;
     private TextView txtFeedback;
     private EditText editGuess;
@@ -111,6 +113,7 @@ public class FrutasActivity extends AppCompatActivity {
         txtBonus = findViewById(R.id.txtBonus);
         txtPontosAcerto = findViewById(R.id.txtPontosAcerto);
         txtCategoryTitle = findViewById(R.id.txtCategoryTitle);
+        txtSyllabicClass = findViewById(R.id.txtSyllabicClass);
         txtHint = findViewById(R.id.txtHint);
         txtFeedback = findViewById(R.id.txtFeedback);
         txtRoundCounter = findViewById(R.id.txtRoundCounter);
@@ -181,6 +184,7 @@ public class FrutasActivity extends AppCompatActivity {
         txtRoundCounter.setText(String.format(Locale.getDefault(), "Rodada: %d/%d", currentRound, MAX_ROUNDS));
         txtPontosAcerto.setText(pontosPorAcerto + " pts");
         txtBonus.setText("+" + bonusTempo);
+        txtSyllabicClass.setText("Classificação: Carregando...");
         btnStart.setEnabled(false);
         editGuess.setEnabled(true);
         btnSubmit.setEnabled(true);
@@ -198,10 +202,15 @@ public class FrutasActivity extends AppCompatActivity {
             hint2 = randomData[5].trim();
             hint3 = randomData[6].trim();
 
+            // Nova classificação
+            syllableClassification = db.getClass(correctWord);
+            txtSyllabicClass.setText("Classificação: " + syllableClassification.toUpperCase());
+
             Log.d("GAME_LOG", "Palavra Correta: " + correctWord);
             showNextHint();
         } else {
             txtHint.setText("ERRO: Banco de dados não retornou dados válidos.");
+            txtSyllabicClass.setText("Classificação: ERRO");
             btnStart.setEnabled(false);
             btnSubmit.setEnabled(false);
             btnHint.setEnabled(false);
@@ -320,18 +329,18 @@ public class FrutasActivity extends AppCompatActivity {
         showGameSummaryDialog(tempoMedio, menorTempo, maiorTempo);
     }
 
-    private void showGameSummaryDialog(int tempoMedio, int menorTempo, int maiorTempo) {
+    private void showGameSummaryDialog (int tempoMedio, int menorTempo, int maiorTempo) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("FIM DO JOGO!");
 
         // CORREÇÃO: Calcular estatísticas corretamente
-
         int totalPontosAcerto = 0;
         int totalPontosBonus = 0;
 
         for (int i = 0; i < pontosRodadas.size(); i++) {
             int pontosBase = pontosRodadas.get(i) - 50; // Remove bônus base de 50
             totalPontosBonus += 50; // Cada rodada tem bônus base de 50
+
 
             totalPontosAcerto += pontosBase;
         }
