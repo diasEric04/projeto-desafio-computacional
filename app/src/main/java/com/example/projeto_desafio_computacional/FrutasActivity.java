@@ -37,6 +37,7 @@ public class FrutasActivity extends AppCompatActivity {
     private int currentHintLevel = 0;
     private boolean gameInProgress = false;
     private String syllableClassification = "";
+    private List<String> usedWords = new ArrayList<>();
 
     // Variáveis de Pontuação
     private int totalPontos = 0;
@@ -214,31 +215,66 @@ public class FrutasActivity extends AppCompatActivity {
         editGuess.setEnabled(true);
         btnSubmit.setEnabled(true);
         btnHint.setEnabled(true);
+        btnSkip.setEnabled(true);
 
         // Inicia timer da rodada para bônus
         rodadaStartTime = System.currentTimeMillis();
         bonusTimerHandler.postDelayed(bonusTimerRunnable, 0);
 
-        String[] randomData = db.getRandomDataByCategory(CATEGORY_NAME);
+        // --- LÓGICA DE BUSCA E VERIFICAÇÃO (CRÍTICA) ---
+        String[] randomData;
+        int maxAttempts = 20; // Limite de tentativas para evitar loop infinito
+        int attempts = 0;
+        boolean newWordFound = false;
 
-        if (randomData != null && randomData.length >= 7) {
-            correctWord = randomData[3].trim().toLowerCase(Locale.getDefault());
+        do {
+            randomData = db.getRandomDataByCategory(CATEGORY_NAME);
+
+            if (randomData != null && randomData.length >= 7) {
+                String candidateWord = randomData[3].trim().toLowerCase(Locale.getDefault());
+
+                // Verifica se a palavra jé foi usada
+                if (!usedWords.contains(candidateWord)) {
+                    // Palavra nova encontrada!
+                    correctWord = candidateWord;
+                    usedWords.add(correctWord); // Adiciona ao histórico
+                    newWordFound = true;
+                    break;
+                }
+            }
+            attempts++;
+
+            // Se o jogo tentar 20 vezes sem sucesso, significa que o DB pode ter poucas palavras
+            if (attempts >= maxAttempts) {
+                // Aqui você pode recomeçar o array 'usedWords' ou parar o jogo
+                Log.w("GAME_LOG", "Todas as palavras foram usadas ou falha na busca.");
+                // Opcional: Esvaziar o array para recomeçar o ciclo de palavras
+                // usedWords.clear();
+                break;
+            }
+        } while (true);
+        // --- FIM DA LÓGICA DE BUSCA E VERIFICAÇÃO ---
+
+        if (newWordFound) {
+            // Se uma palavra nova foi encontrada, preenche o restante dos dados
             hint1 = randomData[4].trim();
             hint2 = randomData[5].trim();
             hint3 = randomData[6].trim();
 
-            // Nova classificação
+            // Nova classificação (Busca separada)
             syllableClassification = db.getClass(correctWord);
             txtSyllabicClass.setText("Classificação: " + syllableClassification.toUpperCase());
 
             Log.d("GAME_LOG", "Palavra Correta: " + correctWord);
             showNextHint();
         } else {
-            txtHint.setText("ERRO: Banco de dados não retornou dados válidos.");
-            txtSyllabicClass.setText("Classificação: ERRO");
+            // Falha ao carregar dados
+            txtHint.setText("ERRO: Banco de dados não retornou dados válidos ou as palavras se esgotaram.");
+            txtSyllabicClass.setText("CLASSIFICAÇÃO: ERRO");
             btnStart.setEnabled(false);
             btnSubmit.setEnabled(false);
             btnHint.setEnabled(false);
+            btnSkip.setEnabled(false);
         }
     }
 
@@ -304,6 +340,7 @@ public class FrutasActivity extends AppCompatActivity {
 
             // Para o timer de bônus da rodada
             bonusTimerHandler.removeCallbacks(bonusTimerRunnable);
+            btnSkip.setEnabled(false);
 
             prepareForNextRound();
         } else {
@@ -316,6 +353,7 @@ public class FrutasActivity extends AppCompatActivity {
         editGuess.setEnabled(false);
         btnHint.setEnabled(false);
         btnSubmit.setEnabled(false);
+        btnSkip.setEnabled(false);
 
         if (currentRound < MAX_ROUNDS) {
             btnStart.setEnabled(true);
@@ -369,6 +407,8 @@ public class FrutasActivity extends AppCompatActivity {
         }
 
         int tempoMedio = temposRodadas.isEmpty() ? 0 : tempoTotal / temposRodadas.size();
+
+        usedWords.clear();
 
         showGameSummaryDialog(tempoMedio, menorTempo, maiorTempo);
     }
