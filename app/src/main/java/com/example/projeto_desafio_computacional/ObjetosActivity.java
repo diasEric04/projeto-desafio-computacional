@@ -1,12 +1,15 @@
 package com.example.projeto_desafio_computacional;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -64,6 +67,7 @@ public class ObjetosActivity extends AppCompatActivity {
     private Button btnStart;
     private Button btnHint;
     private Button btnSubmit;
+    private Button btnSkip;
 
     // Runnable do Cronômetro Principal
     private final Runnable timerRunnable = new Runnable() {
@@ -121,6 +125,7 @@ public class ObjetosActivity extends AppCompatActivity {
         btnStart = findViewById(R.id.btnStart);
         btnHint = findViewById(R.id.btnHint);
         btnSubmit = findViewById(R.id.btnSubmit);
+        btnSkip = findViewById(R.id.btnSkip);
 
         // Inicializa Banco de Dados e Handlers
         db = new DatabaseHelper(this);
@@ -139,7 +144,26 @@ public class ObjetosActivity extends AppCompatActivity {
         btnStart.setOnClickListener(v -> handleStartButton());
         btnHint.setOnClickListener(v -> showNextHint());
         btnSubmit.setOnClickListener(v -> checkGuess());
+        btnSkip.setOnClickListener(v -> skipRound());
         findViewById(R.id.btnVoltarMenu).setOnClickListener(v -> finishGame());
+
+        editGuess.setOnEditorActionListener((v, actionId, event) -> {
+            // Verifica se a ação disparada foi "Done" (Concluído)
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                // Chama a mesma função que o botão TENTAR
+                checkGuess();
+
+                // Oculta o teclado após a tentativa para desobstruir a tela
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+                // Retorna true para indicar que o evento foi consumido (tratado)
+                return true;
+            }
+            // Retorna false para permitir que outras ações de teclado funcionem normalmente
+            return false;
+        });
     }
 
     private void initializeDatabase() {
@@ -163,6 +187,7 @@ public class ObjetosActivity extends AppCompatActivity {
             btnStart.setEnabled(false);
             btnSubmit.setEnabled(true);
             btnHint.setEnabled(true);
+            btnSkip.setEnabled(true);
             txtFeedback.setText("");
         }
 
@@ -300,6 +325,26 @@ public class ObjetosActivity extends AppCompatActivity {
         }
     }
 
+    private void skipRound() {
+        if (!gameInProgress || currentRound >= MAX_ROUNDS) return;
+
+        // 1. Calcula tempo (para estatísticas), mas não pontua
+        int tempoRodada = (int) ((System.currentTimeMillis() - rodadaStartTime) / 1000);
+        temposRodadas.add(tempoRodada);
+        pontosRodadas.add(0); // Adiciona 0 pontos para a rodada pulada
+
+        // 2. Para o timer de bônus
+        bonusTimerHandler.removeCallbacks(bonusTimerRunnable);
+
+        // 3. Feedback visual
+        txtFeedback.setText("PALAVRA PULADA: A resposta era '" + correctWord.toUpperCase(Locale.getDefault()) + "'.");
+        txtFeedback.setTextColor(0xFF9E9E9E); // Cinza
+
+        // 4. Prepara para a próxima rodada
+        prepareForNextRound();
+    }
+
+
     private void endGameSummary() {
         gameInProgress = false;
         timerHandler.removeCallbacks(timerRunnable);
@@ -325,7 +370,6 @@ public class ObjetosActivity extends AppCompatActivity {
 
         int tempoMedio = temposRodadas.isEmpty() ? 0 : tempoTotal / temposRodadas.size();
 
-        // CORREÇÃO: Chama o método sem parâmetros desnecessários
         showGameSummaryDialog(tempoMedio, menorTempo, maiorTempo);
     }
 
