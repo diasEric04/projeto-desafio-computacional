@@ -14,7 +14,7 @@ import java.io.IOException;
 public class MenuActivity extends AppCompatActivity {
 
     private LinearLayout layoutTipos, layoutClasses;
-    private Button btnFrutas, btnAnimais, btnObjetos, btnClasses;
+    private Button btnFrutas, btnAnimais, btnObjetos, btnClasses, btnDissilabas;
     private TextView txtMaxFrutas, txtMaxAnimais, txtMaxObjetos;
     private DatabaseHelper dbHelper;
 
@@ -38,6 +38,7 @@ public class MenuActivity extends AppCompatActivity {
         btnAnimais = findViewById(R.id.btnAnimais);
         btnObjetos = findViewById(R.id.btnObjetos);
         btnClasses = findViewById(R.id.btnClasses);
+        btnDissilabas = findViewById(R.id.btnDissilabas);
 
         txtMaxFrutas = findViewById(R.id.txtMaxFrutas);
         txtMaxAnimais = findViewById(R.id.txtMaxAnimais);
@@ -76,6 +77,7 @@ public class MenuActivity extends AppCompatActivity {
         btnFrutas.setOnClickListener(v -> abrirTelaFrutas());
         btnAnimais.setOnClickListener(v -> abrirTelaAnimais());
         btnObjetos.setOnClickListener(v -> abrirTelaObjetos());
+        btnDissilabas.setOnClickListener(v -> abrirTelaDissilabas());
 
     }
 
@@ -101,6 +103,11 @@ public class MenuActivity extends AppCompatActivity {
 
     private void abrirTelaObjetos() {
         Intent intent = new Intent(MenuActivity.this, ObjetosActivity.class);
+        startActivity(intent);
+    }
+
+    private void abrirTelaDissilabas() {
+        Intent intent = new Intent(MenuActivity.this, DissilabaActivity.class);
         startActivity(intent);
     }
 
