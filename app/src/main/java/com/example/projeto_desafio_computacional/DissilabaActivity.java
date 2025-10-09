@@ -1,0 +1,243 @@
+package com.example.projeto_desafio_computacional;
+
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+public class DissilabaActivity extends AppCompatActivity {
+
+    // Dependência do DatabaseHelper removida.
+
+    private final long GAME_DURATION_MS = 120 * 1000; // 2 minutos em milissegundos (120000ms)
+    private final String classe = "dissílaba";
+
+    // Variáveis de Estado
+    private int score = 0;
+    private long startTime = 0;
+    private boolean gameInProgress = false;
+    private final List<String> submittedWords = new ArrayList<>(); // Armazena palavras VÁLIDAS para evitar repetição
+
+    // Variáveis do Cronômetro
+    private Handler timerHandler;
+    private long timeLeftMillis = GAME_DURATION_MS;
+    private TextView txtTimer;
+
+    // Variáveis da UI
+    private TextView txtScore;
+    private TextView txtSyllabicTarget;
+    private TextView txtFeedback;
+    private EditText editWordInput;
+    private Button btnStart;
+    private Button btnSubmit;
+    private Button btnVoltarMenu;
+
+
+    // Runnable do Cronômetro
+    private final Runnable timerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            timeLeftMillis = GAME_DURATION_MS - (System.currentTimeMillis() - startTime);
+
+            if (timeLeftMillis <= 0) {
+                timeLeftMillis = 0;
+                endGameSummary();
+                return;
+            }
+
+            int seconds = (int) (timeLeftMillis / 1000);
+            int minutes = seconds / 60;
+            seconds = seconds % 60;
+
+            txtTimer.setText(String.format(Locale.getDefault(), "Tempo: %02d:%02d", minutes, seconds));
+            timerHandler.postDelayed(this, 1000);
+        }
+    };
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_dissilaba);
+
+        // 1. Inicializa UI Components
+        txtTimer = findViewById(R.id.txtTimer);
+        txtScore = findViewById(R.id.txtScore);
+        txtSyllabicTarget = findViewById(R.id.txtSyllabicTarget);
+        txtFeedback = findViewById(R.id.txtFeedback);
+        editWordInput = findViewById(R.id.editWordInput);
+        btnStart = findViewById(R.id.btnStart);
+        btnSubmit = findViewById(R.id.btnSubmit);
+        btnVoltarMenu = findViewById(R.id.btnVoltarMenu);
+
+        // 2. Inicializa Handlers (DB removido)
+        timerHandler = new Handler();
+
+        // Configurações iniciais da UI
+        txtSyllabicTarget.setText("OBJETIVO: APENAS PALAVRAS " + classe.toUpperCase());
+        txtTimer.setText(String.format(Locale.getDefault(), "Tempo: %02d:%02d", (int) (GAME_DURATION_MS / 60000), 0));
+        txtScore.setText("Pontos: 0");
+
+        // Estado inicial
+        setGameControlsEnabled(false);
+        btnStart.setEnabled(true);
+
+
+        // 3. Listeners dos Botões
+        btnStart.setOnClickListener(v -> handleStartButton());
+        btnSubmit.setOnClickListener(v -> submitWord());
+        btnVoltarMenu.setOnClickListener(v -> finishGame());
+
+        // Listener para a tecla Enter/Concluído
+        editWordInput.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                submitWord();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+                return true;
+            }
+            return false;
+        });
+    }
+
+    // --- MÉTODOS DE CONTROLE DO JOGO ---
+
+    private void setGameControlsEnabled(boolean enabled) {
+        btnSubmit.setEnabled(enabled);
+        editWordInput.setEnabled(enabled);
+    }
+
+    // Método initializeDatabase removido, pois o DB não é mais usado.
+
+    private void handleStartButton() {
+        if (!gameInProgress) {
+            gameInProgress = true;
+            score = 0;
+            submittedWords.clear(); // Limpa o histórico de palavras
+            startTime = System.currentTimeMillis();
+            timeLeftMillis = GAME_DURATION_MS; // Garante o reset do tempo
+
+            // Reabilita controles e começa a contagem
+            setGameControlsEnabled(true);
+            btnStart.setEnabled(false);
+            btnStart.setText("JOGANDO...");
+            txtScore.setText("Pontos: 0");
+            txtFeedback.setText("O tempo está correndo! Digite as palavras...");
+
+            timerHandler.postDelayed(timerRunnable, 0);
+        }
+    }
+
+    /**
+     * MÉTODO A SER PREENCHIDO (Implementação da regra de validação de palavras).
+     * Retorna TRUE se a palavra existir e for da classe silábica alvo.
+     */
+    private boolean isWordValid(String word) {
+        if (word.isEmpty()) return false;
+
+
+
+        int numeroSilabas = Silabador.contarSilabas(word);
+
+        if (numeroSilabas == 2) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private void submitWord() {
+        if (!gameInProgress) return;
+
+        String word = editWordInput.getText().toString().trim().toLowerCase(Locale.getDefault());
+        editWordInput.setText(""); // Limpa o campo para a próxima palavra
+
+        if (word.isEmpty()) {
+            txtFeedback.setText("Digite algo!");
+            return;
+        }
+
+        // 1. Checa se a palavra já foi usada
+        if (submittedWords.contains(word)) {
+            txtFeedback.setText("PALAVRA REPETIDA: '" + word.toUpperCase() + "' já foi usada.");
+            txtFeedback.setTextColor(0xFFFF9800); // Laranja
+            return;
+        }
+
+        // 2. Valida a palavra (chamada ao método que você preencherá)
+        if (isWordValid(word)) {
+            score++;
+            submittedWords.add(word); // Adiciona ao histórico de palavras válidas
+            txtScore.setText("Pontos: " + score);
+            txtFeedback.setText("CORRETO! " + word.toUpperCase());
+            txtFeedback.setTextColor(0xFF4CAF50); // Verde
+        } else {
+            int n = Silabador.contarSilabas(word);
+            String numSil;
+            switch (n) {
+                case 1: numSil = "monossilaba"; break;
+                case 3: numSil = "trissílaba"; break;
+                default: numSil = "polissílaba"; break;
+            }
+
+            txtFeedback.setText("ERRO! '" + word.toUpperCase() + "' não é " + classe.toUpperCase() + ". É " + numSil);
+            txtFeedback.setTextColor(0xFFF44336); // Vermelho
+        }
+    }
+
+    private void endGameSummary() {
+        gameInProgress = false;
+        timerHandler.removeCallbacks(timerRunnable);
+        setGameControlsEnabled(false);
+        btnStart.setText("REINICIAR JOGO");
+        btnStart.setEnabled(true);
+
+        String message = String.format(
+                "Seu tempo acabou!\n" +
+                        "Pontuação Final: %d palavras válidas.",
+                score
+        );
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("FIM DO TEMPO!");
+        builder.setMessage(message);
+
+        builder.setPositiveButton("FECHAR", (dialog, id) -> dialog.dismiss());
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void finishGame() {
+        if (timerHandler != null) {
+            timerHandler.removeCallbacks(timerRunnable);
+        }
+        Intent intent = new Intent(DissilabaActivity.this, MenuActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (timerHandler != null) {
+            timerHandler.removeCallbacks(timerRunnable);
+        }
+    }
+}

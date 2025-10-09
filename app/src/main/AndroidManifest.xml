@@ -22,6 +22,8 @@
         <activity android:name=".FrutasActivity" />
         <activity android:name=".AnimaisActivity" />
         <activity android:name=".ObjetosActivity" />
+        <activity android:name=".DissilabaActivity" />
+
 
     </application>
 </manifest>
