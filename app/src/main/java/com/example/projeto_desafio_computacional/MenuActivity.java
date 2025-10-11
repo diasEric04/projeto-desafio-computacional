@@ -62,6 +62,9 @@ public class MenuActivity extends AppCompatActivity {
                 btnFrutas.setVisibility(View.VISIBLE);
                 btnAnimais.setVisibility(View.VISIBLE);
                 btnObjetos.setVisibility(View.VISIBLE);
+                txtMaxAnimais.setVisibility((View.VISIBLE));
+                txtMaxObjetos.setVisibility((View.VISIBLE));
+                txtMaxFrutas.setVisibility((View.VISIBLE));
             }
         });
 
@@ -71,6 +74,9 @@ public class MenuActivity extends AppCompatActivity {
             btnFrutas.setVisibility(View.GONE);
             btnAnimais.setVisibility(View.GONE);
             btnObjetos.setVisibility(View.GONE);
+            txtMaxAnimais.setVisibility((View.GONE));
+            txtMaxObjetos.setVisibility((View.GONE));
+            txtMaxFrutas.setVisibility((View.GONE));
         });
 
         // Navegação dos botões

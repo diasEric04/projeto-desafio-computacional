@@ -5,17 +5,27 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.Map;
+import java.util.HashMap;
+
+import java.util.Locale;
+
+
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+
+
 
 public class DissilabaActivity extends AppCompatActivity {
 
@@ -44,6 +54,9 @@ public class DissilabaActivity extends AppCompatActivity {
     private Button btnSubmit;
     private Button btnVoltarMenu;
 
+    // verificador ortografico
+
+    private VerificadorOrtografico verificador;
 
     // Runnable do Cronômetro
     private final Runnable timerRunnable = new Runnable() {
@@ -72,6 +85,8 @@ public class DissilabaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dissilaba);
 
+        verificador = new VerificadorOrtografico(this);
+
         // 1. Inicializa UI Components
         txtTimer = findViewById(R.id.txtTimer);
         txtScore = findViewById(R.id.txtScore);
@@ -99,6 +114,7 @@ public class DissilabaActivity extends AppCompatActivity {
         btnStart.setOnClickListener(v -> handleStartButton());
         btnSubmit.setOnClickListener(v -> submitWord());
         btnVoltarMenu.setOnClickListener(v -> finishGame());
+
 
         // Listener para a tecla Enter/Concluído
         editWordInput.setOnEditorActionListener((v, actionId, event) -> {
@@ -146,19 +162,42 @@ public class DissilabaActivity extends AppCompatActivity {
      * MÉTODO A SER PREENCHIDO (Implementação da regra de validação de palavras).
      * Retorna TRUE se a palavra existir e for da classe silábica alvo.
      */
-    private boolean isWordValid(String word) {
-        if (word.isEmpty()) return false;
-
-
+    private Map<String, Boolean> isWordValid(String word)  {
+        Map<String, Boolean> validacoes = new HashMap<>();
+        validacoes.put("silabasValido", false);
+        validacoes.put("ortografiaValido", false);
+        if (word.isEmpty()) return validacoes;
 
         int numeroSilabas = Silabador.contarSilabas(word);
 
-        if (numeroSilabas == 2) {
-            return true;
+        if (numeroSilabas == 2) validacoes.put("silabasValido", true);
+
+        final Boolean[] ortograficaCorreta = new Boolean[1];
+        final CountDownLatch latch = new CountDownLatch(1);
+
+        verificador.verificarPalavra(word, (Boolean estaCorreta) -> {
+            ortograficaCorreta[0] = estaCorreta;
+            latch.countDown();
+        });
+
+        try {
+            boolean awaitResult = latch.await(2, TimeUnit.SECONDS);
+            if (!awaitResult) {
+                Log.w("VALIDACAO", "Timeout na verificação ortográfica");
+                return validacoes;
+            }
+
+            Log.d("ortografia", word + ": " + ortograficaCorreta[0]);
+
+            if (ortograficaCorreta[0] == null || !ortograficaCorreta[0]) {
+                return validacoes;
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return validacoes;
         }
-        else {
-            return false;
-        }
+        validacoes.put("ortografiaValido", true);
+        return validacoes;
     }
 
     private void submitWord() {
@@ -180,13 +219,16 @@ public class DissilabaActivity extends AppCompatActivity {
         }
 
         // 2. Valida a palavra (chamada ao método que você preencherá)
-        if (isWordValid(word)) {
+        Map<String, Boolean> validacoes = isWordValid(word);
+        Boolean silabasValido = validacoes.get("silabasValido");
+        Boolean ortografiaValido = validacoes.get("ortografiaValido");
+        if (silabasValido && ortografiaValido) {
             score++;
             submittedWords.add(word); // Adiciona ao histórico de palavras válidas
             txtScore.setText("Pontos: " + score);
             txtFeedback.setText("CORRETO! " + word.toUpperCase());
             txtFeedback.setTextColor(0xFF4CAF50); // Verde
-        } else {
+        } else if (!silabasValido) {
             int n = Silabador.contarSilabas(word);
             String numSil;
             switch (n) {
@@ -196,6 +238,9 @@ public class DissilabaActivity extends AppCompatActivity {
             }
 
             txtFeedback.setText("ERRO! '" + word.toUpperCase() + "' não é " + classe.toUpperCase() + ". É " + numSil);
+            txtFeedback.setTextColor(0xFFF44336); // Vermelho
+        } else if (!ortografiaValido) {
+            txtFeedback.setText("ERRO! '" + word.toUpperCase() + "' não é uma palavra conhecida");
             txtFeedback.setTextColor(0xFFF44336); // Vermelho
         }
     }
