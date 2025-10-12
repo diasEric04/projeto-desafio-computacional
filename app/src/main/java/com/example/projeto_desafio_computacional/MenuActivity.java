@@ -3,6 +3,7 @@ package com.example.projeto_desafio_computacional;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -16,6 +17,7 @@ public class MenuActivity extends AppCompatActivity {
     private LinearLayout layoutTipos, layoutClasses;
     private Button btnFrutas, btnAnimais, btnObjetos, btnClasses, btnDissilabas;
     private TextView txtMaxFrutas, txtMaxAnimais, txtMaxObjetos;
+    private TextView txtMaxPolissilabas, txtMaxTrissilabas, txtMaxDissilabas, txtMaxMonossilabas;
     private DatabaseHelper dbHelper;
 
     @Override
@@ -44,6 +46,11 @@ public class MenuActivity extends AppCompatActivity {
         txtMaxAnimais = findViewById(R.id.txtMaxAnimais);
         txtMaxObjetos = findViewById(R.id.txtMaxObjetos);
 
+        txtMaxPolissilabas = findViewById(R.id.txtMaxPolissilabas);
+        txtMaxTrissilabas = findViewById(R.id.txtMaxTrissilabas);
+        txtMaxDissilabas = findViewById(R.id.txtMaxDissilabas);
+        txtMaxMonossilabas = findViewById(R.id.txtMaxMonossilabas);
+
         layoutTipos = findViewById(R.id.layoutTipos);
         layoutClasses = findViewById(R.id.layoutClasses);
 
@@ -65,18 +72,36 @@ public class MenuActivity extends AppCompatActivity {
                 txtMaxAnimais.setVisibility((View.VISIBLE));
                 txtMaxObjetos.setVisibility((View.VISIBLE));
                 txtMaxFrutas.setVisibility((View.VISIBLE));
+                txtMaxPolissilabas.setVisibility((View.GONE));
+                txtMaxTrissilabas.setVisibility((View.GONE));
+                txtMaxDissilabas.setVisibility((View.GONE));
+                txtMaxMonossilabas.setVisibility((View.GONE));
+
             }
         });
 
         btnClasses.setOnClickListener(v -> {
-            layoutClasses.setVisibility(View.VISIBLE);
 
-            btnFrutas.setVisibility(View.GONE);
-            btnAnimais.setVisibility(View.GONE);
-            btnObjetos.setVisibility(View.GONE);
-            txtMaxAnimais.setVisibility((View.GONE));
-            txtMaxObjetos.setVisibility((View.GONE));
-            txtMaxFrutas.setVisibility((View.GONE));
+            int toggleConcordWClasses = layoutClasses.getVisibility() == View.GONE
+                    ? View.VISIBLE : View.GONE;
+
+            int toggleDiscordWClasses = layoutClasses.getVisibility() == View.GONE
+                    ? View.GONE : View.VISIBLE;
+
+            layoutClasses.setVisibility(toggleConcordWClasses);
+            btnFrutas.setVisibility(toggleDiscordWClasses);
+            btnAnimais.setVisibility(toggleDiscordWClasses);
+            btnObjetos.setVisibility(toggleDiscordWClasses);
+            txtMaxAnimais.setVisibility(toggleDiscordWClasses);
+            txtMaxObjetos.setVisibility(toggleDiscordWClasses);
+            txtMaxFrutas.setVisibility(toggleDiscordWClasses);
+            txtMaxPolissilabas.setVisibility(toggleConcordWClasses);
+            txtMaxTrissilabas.setVisibility(toggleConcordWClasses);
+            txtMaxDissilabas.setVisibility(toggleConcordWClasses);
+            txtMaxMonossilabas.setVisibility(toggleConcordWClasses);
+
+
+
         });
 
         // Navegação dos botões
@@ -92,9 +117,18 @@ public class MenuActivity extends AppCompatActivity {
         int maxAnimais = dbHelper.getMaxScoreByGameType("animal");
         int maxObjetos = dbHelper.getMaxScoreByGameType("objeto");
 
+        int maxPolissilabas = dbHelper.getMaxScoreByGameType("polissilaba");
+        int maxTrissilabas = dbHelper.getMaxScoreByGameType("trissilaba");
+        int maxDissilabas = dbHelper.getMaxScoreByGameType("dissilaba");
+        int maxMonossilabas = dbHelper.getMaxScoreByGameType("monossilaba");
         txtMaxFrutas.setText("Max: " + maxFrutas);
         txtMaxAnimais.setText("Max: " + maxAnimais);
         txtMaxObjetos.setText("Max: " + maxObjetos);
+
+        txtMaxPolissilabas.setText("Max: " + maxPolissilabas);
+        txtMaxTrissilabas.setText("Max: " + maxTrissilabas);
+        txtMaxDissilabas.setText("Max: " + maxDissilabas);
+        txtMaxMonossilabas.setText("Max: " + maxMonossilabas);
     }
 
     private void abrirTelaFrutas() {

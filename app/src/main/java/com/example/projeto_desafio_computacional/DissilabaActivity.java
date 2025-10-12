@@ -11,6 +11,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.Map;
@@ -29,10 +32,9 @@ import java.util.List;
 
 public class DissilabaActivity extends AppCompatActivity {
 
-    // Dependência do DatabaseHelper removida.
-
+    private DatabaseHelper db;
     private final long GAME_DURATION_MS = 120 * 1000; // 2 minutos em milissegundos (120000ms)
-    private final String classe = "dissílaba";
+    private final String classe = "dissilaba";
 
     // Variáveis de Estado
     private int score = 0;
@@ -97,8 +99,9 @@ public class DissilabaActivity extends AppCompatActivity {
         btnSubmit = findViewById(R.id.btnSubmit);
         btnVoltarMenu = findViewById(R.id.btnVoltarMenu);
 
-        // 2. Inicializa Handlers (DB removido)
+        db = new DatabaseHelper(this);
         timerHandler = new Handler();
+        initializeDatabase();
 
         // Configurações iniciais da UI
         txtSyllabicTarget.setText("OBJETIVO: APENAS PALAVRAS " + classe.toUpperCase());
@@ -128,6 +131,17 @@ public class DissilabaActivity extends AppCompatActivity {
             }
             return false;
         });
+    }
+
+    private void initializeDatabase() {
+        try {
+            db.createAndOpenDatabase();
+            Log.i("DB_INIT", "Banco de dados copiado/aberto com sucesso.");
+        } catch (IOException e) {
+            Log.e("DB_INIT", "ERRO FATAL: Falha ao copiar o banco de dados.", e);
+            Toast.makeText(this, "ERRO: Falha ao carregar o banco de dados.", Toast.LENGTH_LONG).show();
+            btnStart.setEnabled(false);
+        }
     }
 
     // --- MÉTODOS DE CONTROLE DO JOGO ---
@@ -251,6 +265,8 @@ public class DissilabaActivity extends AppCompatActivity {
         setGameControlsEnabled(false);
         btnStart.setText("REINICIAR JOGO");
         btnStart.setEnabled(true);
+
+        db.saveGameScore(classe.toLowerCase(), score, score);
 
         String message = String.format(
                 "Seu tempo acabou!\n" +
