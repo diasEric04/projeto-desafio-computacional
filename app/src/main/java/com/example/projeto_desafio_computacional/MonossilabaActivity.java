@@ -31,11 +31,11 @@ import java.util.List;
 
 
 
-public class DissilabaActivity extends AppCompatActivity {
+public class MonossilabaActivity extends AppCompatActivity {
 
     private DatabaseHelper db;
     private final long GAME_DURATION_MS = 120 * 1000; // 2 minutos em milissegundos (120000ms)
-    private final String classe = "dissilaba";
+    private final String classe = "monossílaba";
 
     // Variáveis de Estado
     private int score = 0;
@@ -86,7 +86,7 @@ public class DissilabaActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dissilaba);
+        setContentView(R.layout.activity_monossilaba);
 
         verificador = new VerificadorOrtografico(this);
 
@@ -187,7 +187,7 @@ public class DissilabaActivity extends AppCompatActivity {
 
         int numeroSilabas = Silabador.contarSilabas(word);
 
-        if (numeroSilabas == 2) validacoes.put("silabasValido", true);
+        if (numeroSilabas == 1) validacoes.put("silabasValido", true);
 
         final Boolean[] ortograficaCorreta = new Boolean[1];
         final CountDownLatch latch = new CountDownLatch(1);
@@ -249,7 +249,7 @@ public class DissilabaActivity extends AppCompatActivity {
             int n = Silabador.contarSilabas(wordAcento);
             String numSil;
             switch (n) {
-                case 1: numSil = "monossílaba"; break;
+                case 2: numSil = "dissílaba"; break;
                 case 3: numSil = "trissílaba"; break;
                 default: numSil = "polissílaba"; break;
             }
@@ -291,7 +291,7 @@ public class DissilabaActivity extends AppCompatActivity {
         if (timerHandler != null) {
             timerHandler.removeCallbacks(timerRunnable);
         }
-        Intent intent = new Intent(DissilabaActivity.this, MenuActivity.class);
+        Intent intent = new Intent(MonossilabaActivity.this, MenuActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();

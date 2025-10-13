@@ -22,7 +22,10 @@
         <activity android:name=".FrutasActivity" />
         <activity android:name=".AnimaisActivity" />
         <activity android:name=".ObjetosActivity" />
+        <activity android:name=".MonossilabaActivity" />
         <activity android:name=".DissilabaActivity" />
+        <activity android:name=".TrissilabaActivity" />
+        <activity android:name=".PolissilabaActivity" />
 
 
     </application>

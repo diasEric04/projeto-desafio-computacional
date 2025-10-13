@@ -1,6 +1,8 @@
 package com.example.projeto_desafio_computacional;
 
 import android.content.Context;
+
+import java.text.Normalizer;
 import java.util.function.Consumer;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,6 +20,12 @@ public class VerificadorOrtografico {
     public VerificadorOrtografico(Context context) {
         this.context = context;
         carregarDicionario();
+    }
+
+    private String removeAcentos(String text) {
+        if (text == null) return "";
+        String normalized = Normalizer.normalize(text, Normalizer.Form.NFD);
+        return normalized.replaceAll("[\\p{Mn}]", "");
     }
 
     /**
@@ -87,7 +95,7 @@ public class VerificadorOrtografico {
                         Thread.sleep(100);
                     }
 
-                    boolean resultado = dicionario.contains(palavra.toLowerCase());
+                    boolean resultado = dicionario.contains(removeAcentos(palavra.toLowerCase()));
                     callback.accept(resultado);
 
                 } catch (InterruptedException e) {
@@ -98,7 +106,7 @@ public class VerificadorOrtografico {
         }
 
         // Verifica diretamente no dicionário
-        boolean resultado = dicionario.contains(palavra.toLowerCase());
+        boolean resultado = dicionario.contains(removeAcentos(palavra.toLowerCase()));
         callback.accept(resultado);
     }
 

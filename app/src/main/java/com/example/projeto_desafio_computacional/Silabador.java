@@ -8,7 +8,7 @@ import java.util.Set;
 public class Silabador {
 
     private static final Set<String> DIPHTHONGS = new HashSet<>(Arrays.asList(
-            "ai","au","ei","eu","oi","ou","ui","iu","ia","ie","io","ua","ue","uo"
+            "ai","au","ei","eu","oi","ou","ui","iu","ia","ie","io","ua","ue","uo", "ao", "ae", "oe","am","an","em","en","om","on"
     ));
 
     private static boolean isStrong(char base) {
@@ -32,7 +32,7 @@ public class Silabador {
 
     private static boolean isVowelChar(char c) {
         char b = baseChar(c);
-        return b == 'a' || b == 'e' || b == 'i' || b == 'o' || b == 'u' || b == 'y';
+        return b == 'a' || b == 'e' || b == 'i' || b == 'o' || b == 'u';
     }
 
     private static boolean weakVowelHasAccent(char c) {
@@ -66,13 +66,26 @@ public class Silabador {
 
     private static boolean isDiphthong(String seq) {
         if (seq == null || seq.length() != 2) return false;
-        char c1 = seq.charAt(0), c2 = seq.charAt(1);
-        if (weakVowelHasAccent(c1) || weakVowelHasAccent(c2)) return false;
+
+        char c1 = seq.charAt(0);
+        char c2 = seq.charAt(1);
+
+        // AQUI: Se uma vogal fraca estiver acentuada, NÃO é ditongo (É um hiato).
+        if ((isWeak(baseChar(c1)) && weakVowelHasAccent(c1)) || (isWeak(baseChar(c2)) && weakVowelHasAccent(c2))) {
+            return false; // Força a separação silábica (hiato)
+        }
+
         String base = removeDiacritics(seq).toLowerCase();
+
+        // Verifica ditongos especiais (como "am", "an", "ãe", etc. na sua lista)
         if (DIPHTHONGS.contains(base)) return true;
+
         char b1 = baseChar(c1), b2 = baseChar(c2);
+
+        // Regra geral de ditongo (Vogal Fraca + Vogal Forte, Vogal Forte + Vogal Fraca, ou duas Vogais Fracas)
         return (isWeak(b1) && isStrong(b2)) || (isStrong(b1) && isWeak(b2)) || (isWeak(b1) && isWeak(b2));
     }
+
 
     private static boolean isTriphthong(String seq) {
         if (seq == null || seq.length() != 3) return false;
