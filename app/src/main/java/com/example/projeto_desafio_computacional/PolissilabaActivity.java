@@ -35,7 +35,7 @@ public class PolissilabaActivity extends AppCompatActivity {
 
     private DatabaseHelper db;
     private final long GAME_DURATION_MS = 120 * 1000; // 2 minutos em milissegundos (120000ms)
-    private final String classe = "polissílaba";
+    private final String classe = "polissilaba";
 
     // Variáveis de Estado
     private int score = 0;
