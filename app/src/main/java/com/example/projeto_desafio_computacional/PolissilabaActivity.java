@@ -31,11 +31,11 @@ import java.util.List;
 
 
 
-public class DissilabaActivity extends AppCompatActivity {
+public class PolissilabaActivity extends AppCompatActivity {
 
     private DatabaseHelper db;
     private final long GAME_DURATION_MS = 120 * 1000; // 2 minutos em milissegundos (120000ms)
-    private final String classe = "dissilaba";
+    private final String classe = "polissílaba";
 
     // Variáveis de Estado
     private int score = 0;
@@ -86,7 +86,7 @@ public class DissilabaActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dissilaba);
+        setContentView(R.layout.activity_polissilaba);
 
         verificador = new VerificadorOrtografico(this);
 
@@ -187,7 +187,7 @@ public class DissilabaActivity extends AppCompatActivity {
 
         int numeroSilabas = Silabador.contarSilabas(word);
 
-        if (numeroSilabas == 2) validacoes.put("silabasValido", true);
+        if (numeroSilabas >= 4) validacoes.put("silabasValido", true);
 
         final Boolean[] ortograficaCorreta = new Boolean[1];
         final CountDownLatch latch = new CountDownLatch(1);
@@ -250,8 +250,8 @@ public class DissilabaActivity extends AppCompatActivity {
             String numSil;
             switch (n) {
                 case 1: numSil = "monossílaba"; break;
-                case 3: numSil = "trissílaba"; break;
-                default: numSil = "polissílaba"; break;
+                case 2: numSil = "dissílaba"; break;
+                default: numSil = "trissílaba"; break;
             }
 
             txtFeedback.setText("ERRO! '" + wordAcento.toUpperCase() + "' não é " + classe.toUpperCase() + ". É " + numSil.toUpperCase());
@@ -291,7 +291,7 @@ public class DissilabaActivity extends AppCompatActivity {
         if (timerHandler != null) {
             timerHandler.removeCallbacks(timerRunnable);
         }
-        Intent intent = new Intent(DissilabaActivity.this, MenuActivity.class);
+        Intent intent = new Intent(PolissilabaActivity.this, MenuActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();

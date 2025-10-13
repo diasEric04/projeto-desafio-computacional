@@ -15,7 +15,7 @@ import java.io.IOException;
 public class MenuActivity extends AppCompatActivity {
 
     private LinearLayout layoutTipos, layoutClasses;
-    private Button btnFrutas, btnAnimais, btnObjetos, btnClasses, btnDissilabas;
+    private Button btnFrutas, btnAnimais, btnObjetos, btnClasses, btnMonossilabas, btnDissilabas, btnTrissilabas, btnPolissilabas;
     private TextView txtMaxFrutas, txtMaxAnimais, txtMaxObjetos;
     private TextView txtMaxPolissilabas, txtMaxTrissilabas, txtMaxDissilabas, txtMaxMonossilabas;
     private DatabaseHelper dbHelper;
@@ -40,7 +40,10 @@ public class MenuActivity extends AppCompatActivity {
         btnAnimais = findViewById(R.id.btnAnimais);
         btnObjetos = findViewById(R.id.btnObjetos);
         btnClasses = findViewById(R.id.btnClasses);
+        btnMonossilabas = findViewById(R.id.btnMonossilabas);
         btnDissilabas = findViewById(R.id.btnDissilabas);
+        btnTrissilabas = findViewById(R.id.btnTrissilabas);
+        btnPolissilabas = findViewById(R.id.btnPolissilabas);
 
         txtMaxFrutas = findViewById(R.id.txtMaxFrutas);
         txtMaxAnimais = findViewById(R.id.txtMaxAnimais);
@@ -108,7 +111,10 @@ public class MenuActivity extends AppCompatActivity {
         btnFrutas.setOnClickListener(v -> abrirTelaFrutas());
         btnAnimais.setOnClickListener(v -> abrirTelaAnimais());
         btnObjetos.setOnClickListener(v -> abrirTelaObjetos());
+        btnMonossilabas.setOnClickListener(v -> abrirTelaMonossilabas());
         btnDissilabas.setOnClickListener(v -> abrirTelaDissilabas());
+        btnTrissilabas.setOnClickListener(v -> abrirTelaTrissilabas());
+        btnPolissilabas.setOnClickListener(v -> abrirTelaPolissilabas());
 
     }
 
@@ -146,8 +152,23 @@ public class MenuActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void abrirTelaMonossilabas() {
+        Intent intent = new Intent(MenuActivity.this, MonossilabaActivity.class);
+        startActivity(intent);
+    }
+
     private void abrirTelaDissilabas() {
         Intent intent = new Intent(MenuActivity.this, DissilabaActivity.class);
+        startActivity(intent);
+    }
+
+    private void abrirTelaTrissilabas() {
+        Intent intent = new Intent(MenuActivity.this, TrissilabaActivity.class);
+        startActivity(intent);
+    }
+
+    private void abrirTelaPolissilabas() {
+        Intent intent = new Intent(MenuActivity.this, PolissilabaActivity.class);
         startActivity(intent);
     }
 
