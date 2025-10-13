@@ -293,14 +293,14 @@ public class FrutasActivity extends AppCompatActivity {
         boolean isLastHint = false;
 
         if (currentHintLevel >= 1) {
-            hintAccumulator.append("- DICA 1: ").append(hint1).append("\n");
+            hintAccumulator.append("- DICA 1: ").append(hint1.replace(".", "")).append("\n");
         }
         if (currentHintLevel >= 2) {
-            hintAccumulator.append("- DICA 2: ").append(hint2).append("\n");
+            hintAccumulator.append("- DICA 2: ").append(hint2.replace(".", "")).append("\n");
             totalDicasUsadas++;
         }
         if (currentHintLevel >= 3) {
-            hintAccumulator.append("- DICA 3: ").append(hint3).append("\n");
+            hintAccumulator.append("- DICA 3: ").append(hint3.replace(".", "")).append("\n");
             isLastHint = true;
             totalDicasUsadas++;
         }
