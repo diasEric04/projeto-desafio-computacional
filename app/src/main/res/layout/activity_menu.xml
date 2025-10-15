@@ -76,7 +76,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/button_game_classe"
-                android:text="🎓 JOGAR POR CLASSE SILÁBICA"
+                android:text="🎓 JOGAR POR CLASSE"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnComoJogar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/button_como_jogar"
+                android:text="COMO JOGAR?"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp" />
         </LinearLayout>

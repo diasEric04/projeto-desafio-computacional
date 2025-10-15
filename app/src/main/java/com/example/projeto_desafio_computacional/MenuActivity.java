@@ -3,6 +3,7 @@ package com.example.projeto_desafio_computacional;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -20,7 +21,7 @@ public class MenuActivity extends AppCompatActivity {
 
     // Removido btnClasses
     private Button btnJogar, btnJogarPorTipo, btnJogarPorClasse;
-    private Button btnFrutas, btnAnimais, btnObjetos, btnMonossilabas, btnDissilabas, btnTrissilabas, btnPolissilabas, btnSobre;
+    private Button btnFrutas, btnAnimais, btnObjetos, btnMonossilabas, btnDissilabas, btnTrissilabas, btnPolissilabas, btnSobre, btnComoJogar;
 
     private TextView txtMaxFrutas, txtMaxAnimais, txtMaxObjetos;
     private TextView txtMaxPolissilabas, txtMaxTrissilabas, txtMaxDissilabas, txtMaxMonossilabas;
@@ -58,6 +59,8 @@ public class MenuActivity extends AppCompatActivity {
         btnTrissilabas = findViewById(R.id.btnTrissilabas);
         btnPolissilabas = findViewById(R.id.btnPolissilabas);
         btnSobre = findViewById(R.id.btnSobre);
+        btnComoJogar = findViewById(R.id.btnComoJogar);
+
         txtMaxFrutas = findViewById(R.id.txtMaxFrutas);
         txtMaxAnimais = findViewById(R.id.txtMaxAnimais);
         txtMaxObjetos = findViewById(R.id.txtMaxObjetos);
@@ -134,6 +137,7 @@ public class MenuActivity extends AppCompatActivity {
         btnTrissilabas.setOnClickListener(v -> abrirTelaTrissilabas());
         btnPolissilabas.setOnClickListener(v -> abrirTelaPolissilabas());
         btnSobre.setOnClickListener(v -> abrirSobre());
+        btnComoJogar.setOnClickListener(v -> abrirComoJogar());
     }
 
     private void carregarPontuacoesMaximas() {
@@ -207,10 +211,28 @@ public class MenuActivity extends AppCompatActivity {
                 .show();
     }
 
+    private void abrirComoJogar() {
+        String regras = "Modos de jogo:<br><br>" +
+                "<b>Jogo por categoria</b><br>" +
+                "No modo por categoria, o jogador deve adivinhar qual é a palavra sorteada a partir da dica da classificação das sílabas " +
+                "e das 3 outras dicas sobre a palavra em si. Desse modo, quanto mais rápido e " +
+                "menos dicas forem necessárias, maior a pontuação ao fim do jogo. Caso pule, a pontuação não será contabilizada. " +
+                "A última palavra não pode ser pulada!<br><br>" +
+                "<b>Jogo por classe</b><br>" +
+                "No modo por classe, o jogador deve inserir o maior número de palavras válidas daquela classificação dentro de 2 minutos. Não tem segredo, quanto mais, melhor!<br><br>" +
+                "<b>Bom jogo e divirta-se enquanto aprende!</b><br><br>" +
+                "<b>OBS:</b> o jogo pode apresentar alguns erros na contagem de sílabas.";
+
+        new AlertDialog.Builder(this)
+                .setTitle("Como Jogar Silabrain")
+                .setMessage(Html.fromHtml(regras, Html.FROM_HTML_MODE_LEGACY))
+                .setPositiveButton("Entendi!", null)
+                .show();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
-        // Atualiza as pontuações quando retorna para o menu
         carregarPontuacoesMaximas();
     }
 }
