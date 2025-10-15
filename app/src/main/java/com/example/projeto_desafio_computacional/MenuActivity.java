@@ -82,6 +82,8 @@ public class MenuActivity extends AppCompatActivity {
             if (!isOpcoesVisible) {
                 // Se o layout de opções estiver fechado, abra
                 layoutOpcoes.setVisibility(View.VISIBLE);
+                btnJogarPorTipo.setVisibility(View.VISIBLE);
+                btnJogarPorClasse.setVisibility(View.VISIBLE);
                 btnJogar.setText("❌ FECHAR MENU");
                 // Atualiza as pontuações ao abrir o menu
                 carregarPontuacoesMaximas();
@@ -100,9 +102,11 @@ public class MenuActivity extends AppCompatActivity {
                 // Abre layoutTipos e fecha layoutClasses
                 layoutTipos.setVisibility(View.VISIBLE);
                 layoutClasses.setVisibility(View.GONE);
+                btnJogarPorClasse.setVisibility(View.GONE);
             } else {
                 // Fecha layoutTipos (toggle)
                 layoutTipos.setVisibility(View.GONE);
+                btnJogarPorClasse.setVisibility(View.VISIBLE);
             }
         });
 
@@ -112,9 +116,11 @@ public class MenuActivity extends AppCompatActivity {
                 // Abre layoutClasses e fecha layoutTipos
                 layoutClasses.setVisibility(View.VISIBLE);
                 layoutTipos.setVisibility(View.GONE);
+                btnJogarPorTipo.setVisibility(View.GONE);
             } else {
                 // Fecha layoutClasses (toggle)
                 layoutClasses.setVisibility(View.GONE);
+                btnJogarPorTipo.setVisibility(View.VISIBLE);
             }
         });
 
