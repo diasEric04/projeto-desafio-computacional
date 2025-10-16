@@ -254,7 +254,8 @@ public class DissilabaActivity extends AppCompatActivity {
                 default: numSil = "polissílaba"; break;
             }
 
-            txtFeedback.setText("ERRO! '" + wordAcento.toUpperCase() + "' não é " + classe.toUpperCase() + ". É " + numSil.toUpperCase());
+            txtFeedback.setText("ERRO! '" + wordAcento.toUpperCase() + "' não é " + classe.toUpperCase() + ". É " +
+                    numSil.toUpperCase());
             txtFeedback.setTextColor(0xFFF44336); // Vermelho
         } else if (!ortografiaValido) {
             txtFeedback.setText("ERRO! '" + wordAcento.toUpperCase() + "' não é uma palavra conhecida");

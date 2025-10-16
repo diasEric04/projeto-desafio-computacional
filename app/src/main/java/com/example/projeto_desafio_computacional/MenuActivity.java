@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -21,7 +22,7 @@ public class MenuActivity extends AppCompatActivity {
 
     // Removido btnClasses
     private Button btnJogar, btnJogarPorTipo, btnJogarPorClasse;
-    private Button btnFrutas, btnAnimais, btnObjetos, btnMonossilabas, btnDissilabas, btnTrissilabas, btnPolissilabas, btnSobre, btnComoJogar;
+    private Button btnFrutas, btnAnimais, btnObjetos, btnMonossilabas, btnDissilabas, btnTrissilabas, btnPolissilabas, btnSobre, btnComoJogar, btnForm;
 
     private TextView txtMaxFrutas, txtMaxAnimais, txtMaxObjetos;
     private TextView txtMaxPolissilabas, txtMaxTrissilabas, txtMaxDissilabas, txtMaxMonossilabas;
@@ -59,6 +60,7 @@ public class MenuActivity extends AppCompatActivity {
         btnTrissilabas = findViewById(R.id.btnTrissilabas);
         btnPolissilabas = findViewById(R.id.btnPolissilabas);
         btnSobre = findViewById(R.id.btnSobre);
+        btnForm = findViewById(R.id.btnForm);
         btnComoJogar = findViewById(R.id.btnComoJogar);
 
         txtMaxFrutas = findViewById(R.id.txtMaxFrutas);
@@ -137,6 +139,7 @@ public class MenuActivity extends AppCompatActivity {
         btnTrissilabas.setOnClickListener(v -> abrirTelaTrissilabas());
         btnPolissilabas.setOnClickListener(v -> abrirTelaPolissilabas());
         btnSobre.setOnClickListener(v -> abrirSobre());
+        btnForm.setOnClickListener(v -> abrirForm());
         btnComoJogar.setOnClickListener(v -> abrirComoJogar());
     }
 
@@ -209,6 +212,22 @@ public class MenuActivity extends AppCompatActivity {
                     dialog.dismiss();
                 })
                 .show();
+    }
+
+    private void abrirForm() {
+        String mensagem = "A sua sugestão/avaliação é importante para nós!<br><br>" +
+                "Entre no link a seguir para deixar a sua opinião:<br>" +
+                "<a href='https://forms.gle/y5cgHuXtLT3rE7Zh6'>📋 Formulário</a>";
+
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Formulário de sugestão")
+                .setMessage(Html.fromHtml(mensagem, Html.FROM_HTML_MODE_LEGACY))
+                .setPositiveButton("Fechar", (d, w) -> d.dismiss())
+                .create();
+        dialog.show();
+        ((TextView) dialog.findViewById(android.R.id.message))
+                .setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     private void abrirComoJogar() {
