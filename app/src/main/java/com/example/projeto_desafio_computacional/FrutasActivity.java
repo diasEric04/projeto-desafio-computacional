@@ -148,6 +148,7 @@ public class FrutasActivity extends AppCompatActivity {
         btnSkip.setOnClickListener(v -> skipRound());
         findViewById(R.id.btnVoltarMenu).setOnClickListener(v -> finishGame());
 
+        editGuess.setEnabled(false);
         editGuess.setOnEditorActionListener((v, actionId, event) -> {
             // Verifica se a ação disparada foi "Done" (Concluído)
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -184,6 +185,7 @@ public class FrutasActivity extends AppCompatActivity {
             timerHandler.postDelayed(timerRunnable, 0);
             gameInProgress = true;
 
+            editGuess.setEnabled(true);
             btnStart.setText("PRÓXIMA RODADA");
             btnStart.setEnabled(false);
             btnSubmit.setEnabled(true);
